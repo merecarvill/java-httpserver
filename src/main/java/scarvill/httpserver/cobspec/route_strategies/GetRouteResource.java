@@ -17,10 +17,10 @@ public class GetRouteResource implements Function<Request, Response> {
 
     @Override
     public Response apply(Request request) {
-        String contentLength = "Content-Length: " + resource.getData().length() + "\r\n";
+        String contentLength = "Content-Length: " + resource.getData().length + "\r\n";
         return new ResponseBuilder().setStatus(Status.OK)
                                     .setHeaders(new String[]{contentLength})
-                                    .setBody(resource.getData())
+                                    .setBody(new String(resource.getData()))
                                     .build();
     }
 }

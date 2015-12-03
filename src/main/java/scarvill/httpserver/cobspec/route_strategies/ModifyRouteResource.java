@@ -17,7 +17,7 @@ public class ModifyRouteResource implements Function<Request, Response> {
 
     @Override
     public Response apply(Request request) {
-        resource.setData(request.getBody());
+        resource.setData(request.getBody().getBytes());
 
         return new ResponseBuilder().setStatus(Status.OK).build();
     }
