@@ -9,10 +9,12 @@ import scarvill.httpserver.cobspec.route_strategies.EchoRequestParameters;
 import scarvill.httpserver.cobspec.route_strategies.GetRouteResource;
 import scarvill.httpserver.cobspec.route_strategies.GiveStaticResponse;
 import scarvill.httpserver.request.Request;
+import scarvill.httpserver.routes.FileResource;
 import scarvill.httpserver.routes.Resource;
 import scarvill.httpserver.routes.StringResource;
 import scarvill.httpserver.routes.Router;
 
+import java.io.File;
 import java.util.function.Function;
 
 public class Cobspec {
@@ -28,7 +30,7 @@ public class Cobspec {
                 .setStatus(Status.OK)
                 .build());
 
-    public static Router configuredRouter() {
+    public static Router configuredRouter(String publicDirectory) {
         Router router = new Router();
 
         router.addRoute("/", Method.GET, new GetRouteResource(new StringResource("")));
@@ -46,8 +48,11 @@ public class Cobspec {
         router.addRoute("/method_options", Method.POST, STATUS_OK_HANDLER);
         router.addRoute("/method_options", Method.HEAD, STATUS_OK_HANDLER);
 
-        router.addRoute("/file1", Method.GET, STATUS_OK_HANDLER);
-        router.addRoute("/text-file.txt", Method.GET, STATUS_OK_HANDLER);
+        Resource file1 = new FileResource(new File(publicDirectory + "/file1").toPath());
+        router.addRoute("/file1", Method.GET, new GetRouteResource(file1));
+
+        Resource textfile = new FileResource(new File(publicDirectory + "/text-file.txt").toPath());
+        router.addRoute("/text-file.txt", Method.GET, new GetRouteResource(textfile));
 
         router.addRoute("/parameters", Method.GET, new EchoRequestParameters());
 
