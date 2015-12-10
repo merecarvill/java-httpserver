@@ -49,8 +49,18 @@ public class Cobspec {
         Resource file1 = new FileResource(Paths.get(publicDirectory + "/file1"));
         router.addRoute("/file1", Method.GET, new GetRouteResource(file1));
 
+        Resource file2 = new FileResource(Paths.get(publicDirectory + "/file2"));
+        router.addRoute("/file2", Method.GET, new GetRouteResource(file2));
+
         Resource textfile = new FileResource(Paths.get(publicDirectory + "/text-file.txt"));
         router.addRoute("/text-file.txt", Method.GET, new GetRouteResource(textfile));
+
+        Resource partialContent =
+            new FileResource(Paths.get(publicDirectory + "/partial_content.txt"));
+        router.addRoute("/partial_content.txt", Method.GET, new GetRouteResource(partialContent));
+
+        Resource patchContent = new FileResource(Paths.get(publicDirectory + "/patch-content.txt"));
+        router.addRoute("/patch-content.txt", Method.GET, new GetRouteResource(patchContent));
 
         Resource jpeg = new FileResource(Paths.get(publicDirectory + "/image.jpeg"));
         router.addRoute("/image.jpeg", Method.GET, new GetRouteResource(jpeg));
@@ -60,10 +70,6 @@ public class Cobspec {
 
         Resource gif = new FileResource(Paths.get(publicDirectory + "/image.gif"));
         router.addRoute("/image.gif", Method.GET, new GetRouteResource(gif));
-
-        Resource partialContent =
-            new FileResource(Paths.get(publicDirectory + "/partial_content.txt"));
-        router.addRoute("/partial_content.txt", Method.GET, new GetRouteResource(partialContent));
 
         return router;
     }
@@ -89,7 +95,7 @@ public class Cobspec {
             DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(publicDirectory));
             for (Path entry : stream) {
                 String filename = entry.getFileName().toString();
-                directoryList += "<li><a href=" + filename + ">" + filename + "</a></li>\n";
+                directoryList += "<li><a href=/" + filename + ">" + filename + "</a></li>\n";
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
