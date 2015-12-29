@@ -34,4 +34,9 @@ public class Logger {
         out.println("Body-length: " + response.getBody().length);
         out.println();
     }
+
+    public void logException(String message) {
+        out.println("*** Server Exception ***");
+        out.println(message);
+    }
 }

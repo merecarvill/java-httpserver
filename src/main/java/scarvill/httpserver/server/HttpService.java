@@ -1,7 +1,10 @@
 package scarvill.httpserver.server;
 
+import scarvill.httpserver.request.HttpRequest;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.Response;
+import scarvill.httpserver.response.ResponseBuilder;
+import scarvill.httpserver.response.Status;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -36,14 +39,28 @@ public class HttpService implements Serveable {
     }
 
     private void handleClientTransaction(BufferedReader in, BufferedOutputStream out) throws IOException {
-        Request request = io.readRequest(in);
-        Response response = router.apply(request);
+        Response response = generateResponse(in);
+        logger.logResponse(response);
         io.writeResponse(out, response);
-        logTransaction(request, response);
     }
 
-    private void logTransaction(Request request, Response response) {
-        logger.logRequest(request);
-        logger.logResponse(response);
+    private Response generateResponse(BufferedReader in) {
+        try {
+            Request request = io.readRequest(in);
+            logger.logRequest(request);
+
+            return router.apply(request);
+        } catch (IOException e) {
+            logger.logException(e.getMessage());
+
+            return serverErrorResponse();
+        }
+    }
+
+    private Response serverErrorResponse() {
+        return new ResponseBuilder()
+            .setStatus(Status.SERVER_ERROR)
+            .setBody(Status.SERVER_ERROR.toString().getBytes())
+            .build();
     }
 }

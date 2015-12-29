@@ -1,6 +1,7 @@
 package scarvill.httpserver.server;
 
 import org.junit.Test;
+import scarvill.httpserver.request.HttpRequest;
 import scarvill.httpserver.request.Method;
 import scarvill.httpserver.request.Request;
 import scarvill.httpserver.response.HttpResponse;

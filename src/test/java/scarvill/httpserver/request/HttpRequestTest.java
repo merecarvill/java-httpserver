@@ -8,7 +8,7 @@ import static scarvill.httpserver.request.Method.*;
 
 public class HttpRequestTest {
     @Test
-    public void testParsesRequestMethod() {
+    public void testParsesRequestMethod()  {
         Request getRequest = new HttpRequest(GET.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
         Request postRequest = new HttpRequest(POST.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
         Request putRequest = new HttpRequest(PUT.toString() + " /uri HTTP/1.1\r\n\r\n").parse();
@@ -27,14 +27,14 @@ public class HttpRequestTest {
     }
 
     @Test
-    public void testParsesInvalidRawHTTPRequestMethod() {
+    public void testParsesUnsupportedMethodInRawHTTPRequest() {
         Request request = new HttpRequest("FOO /uri HTTP/1.1\r\n\r\n").parse();
 
-        assertEquals(NULL_METHOD, request.getMethod());
+        assertEquals(Method.UNSUPPORTED, request.getMethod());
     }
 
     @Test
-    public void testParsesRawHTTPRequestURI() {
+    public void testParsesRawHTTPRequestURI()  {
         Request request = new HttpRequest("GET /uri HTTP/1.1\r\n\r\n").parse();
 
         assertEquals("/uri", request.getURI());

@@ -6,6 +6,7 @@ import scarvill.httpserver.response.Response;
 import scarvill.httpserver.response.ResponseBuilder;
 import scarvill.httpserver.response.Status;
 import scarvill.httpserver.routing.GiveStaticResponse;
+import scarvill.httpserver.routing.RouteRequest;
 
 import java.io.*;
 import java.net.Socket;
@@ -50,6 +51,19 @@ public class HttpServiceTest {
         assertEquals(expectedResponseString, new String(outputStream.toByteArray()));
     }
 
+    @Test
+    public void testSends500ServerErrorResponseWhenAnIOExceptionIsRaised() throws Exception {
+        InputStream inputStream = new FailingInputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        MockSocket clientSocket = new MockSocket(inputStream, outputStream);
+        Logger logger = new Logger(new NullPrintStream());
+        HttpService service = new HttpService(logger, new RouteRequest());
+
+        service.serve(clientSocket).run();
+
+        assertTrue(new String(outputStream.toByteArray()).contains(Status.SERVER_ERROR.toString()));
+    }
+
     private class MockSocket extends Socket {
         private final OutputStream outputStream;
         private final InputStream inputStream;
@@ -67,6 +81,13 @@ public class HttpServiceTest {
         @Override
         public OutputStream getOutputStream() {
             return outputStream;
+        }
+    }
+
+    private class FailingInputStream extends InputStream {
+        @Override
+        public int read() throws IOException {
+            throw new IOException();
         }
     }
 

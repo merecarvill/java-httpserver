@@ -67,4 +67,18 @@ public class LoggerTest {
 
         assertEquals(expectedLog, out.toString());
     }
+
+    @Test
+    public void testLogsExceptionMessageToGivenOutputStream() throws Exception {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Logger logger = new Logger(new PrintStream(out));
+
+        String expectedLog =
+            "*** Server Exception ***\n" +
+                "exception message\n";
+
+        logger.logException("exception message");
+
+        assertEquals(expectedLog, out.toString());
+    }
 }

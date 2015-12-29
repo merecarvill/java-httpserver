@@ -48,7 +48,7 @@ public class HttpRequest {
             case "DELETE":
                 return DELETE;
             default:
-                return NULL_METHOD;
+                return UNSUPPORTED;
         }
     }
 
@@ -77,23 +77,24 @@ public class HttpRequest {
         HashMap<String, String> parameters = new HashMap<>();
 
         for (String argument : query.split("&")) {
-            addParameterIfWellFormed(argument, parameters);
+            addParameterIfHasBothNameAndValue(argument, parameters);
         }
 
         return parameters;
     }
 
-    private void addParameterIfWellFormed(String argument, HashMap<String, String> parameters) throws UnsupportedEncodingException {
-        String[] nameAndValue = argument.split("=");
-
-        if (argumentHasBothNameAndValue(nameAndValue)) {
+    private void addParameterIfHasBothNameAndValue(String argument, HashMap<String, String> parameters) throws UnsupportedEncodingException {
+        if (hasBothNameAndValue(argument)) {
+            String[] nameAndValue = argument.split("=");
             String name = URLDecoder.decode(nameAndValue[0], "UTF-8");
             String value = URLDecoder.decode(nameAndValue[1], "UTF-8");
             parameters.put(name, value);
         }
     }
 
-    private boolean argumentHasBothNameAndValue(String[] nameAndValue) {
+    private boolean hasBothNameAndValue(String argument) {
+        String[] nameAndValue = argument.split("=");
+
         return nameAndValue.length >= 2;
     }
 
